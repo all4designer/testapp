@@ -347,12 +347,12 @@ export default function RouteResult() {
       </aside>
 
       {/* Map Container */}
-      <main className="flex-1 relative flex flex-col">
-        <div ref={mapRef} className="flex-1 w-full" data-testid="yandex-map" />
+      <main className="flex-1 relative overflow-hidden">
+        <div ref={mapRef} className="w-full h-full" data-testid="yandex-map" />
         
         {/* Desktop Bottom Panel for Selected Attraction */}
         {selectedAttraction !== null && (
-          <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-card-border p-4">
+          <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-card-border p-4 z-30">
             <div className="flex gap-4 items-start">
               <div className="w-24 aspect-square rounded-lg overflow-hidden flex-shrink-0">
                 <img
@@ -402,7 +402,7 @@ export default function RouteResult() {
           <SheetTrigger asChild>
             <Button
               size="lg"
-              className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 shadow-lg"
+              className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 shadow-lg"
               data-testid="button-open-mobile-result"
             >
               <Menu className="w-5 h-5 mr-2" />

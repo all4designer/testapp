@@ -202,7 +202,7 @@ export default function RoutePlanner({ onPlanRoute }: RoutePlannerProps) {
   );
 
   return (
-    <div className="h-screen pt-16 flex flex-col md:flex-row">
+    <div className="h-screen pt-16 flex flex-col md:flex-row overflow-hidden">
       {/* Desktop Sidebar */}
       <aside className="hidden md:block w-96 lg:w-[28rem] bg-card border-r border-card-border overflow-y-auto">
         <div className="p-6 space-y-6">
@@ -223,20 +223,22 @@ export default function RoutePlanner({ onPlanRoute }: RoutePlannerProps) {
       </aside>
 
       {/* Map Container */}
-      <main className="flex-1 relative">
-        <InteractiveMap
-          onLocationSelect={handleLocationSelect}
-          startPoint={startPoint}
-          endPoint={endPoint}
-          mode={mapMode}
-        />
+      <main className="flex-1 relative overflow-hidden">
+        <div className="w-full h-full">
+          <InteractiveMap
+            onLocationSelect={handleLocationSelect}
+            startPoint={startPoint}
+            endPoint={endPoint}
+            mode={mapMode}
+          />
+        </div>
 
         {/* Mobile Sheet Trigger */}
         <Sheet open={mobileSheetOpen} onOpenChange={setMobileSheetOpen}>
           <SheetTrigger asChild>
             <Button
               size="lg"
-              className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 shadow-lg"
+              className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 shadow-lg"
               data-testid="button-open-mobile-planner"
             >
               <Menu className="w-5 h-5 mr-2" />
