@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { MapPin, Navigation } from "lucide-react";
 import InteractiveMap from "./InteractiveMap";
 
@@ -34,6 +35,8 @@ const budgetLevels = [
 export default function RoutePlanner({ onPlanRoute }: RoutePlannerProps) {
   const [startPoint, setStartPoint] = useState<{ lat: number; lng: number; name: string } | null>(null);
   const [endPoint, setEndPoint] = useState<{ lat: number; lng: number; name: string } | null>(null);
+  const [startText, setStartText] = useState("");
+  const [endText, setEndText] = useState("");
   const [budget, setBudget] = useState(1);
   const [selectedStyles, setSelectedStyles] = useState<string[]>([]);
   const [mapMode, setMapMode] = useState<'start' | 'end' | null>(null);
@@ -49,17 +52,32 @@ export default function RoutePlanner({ onPlanRoute }: RoutePlannerProps) {
   const handleLocationSelect = (location: { lat: number; lng: number; name: string }) => {
     if (mapMode === 'start') {
       setStartPoint(location);
-      setMapMode('end');
+      setStartText(location.name);
+      setMapMode(null);
     } else if (mapMode === 'end') {
       setEndPoint(location);
+      setEndText(location.name);
       setMapMode(null);
     }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (startPoint && endPoint) {
-      onPlanRoute?.({ startPoint, endPoint, budget, selectedStyles });
+    
+    const finalStart = startPoint || (startText ? {
+      lat: 47.2357,
+      lng: 39.7015,
+      name: startText
+    } : null);
+    
+    const finalEnd = endPoint || (endText ? {
+      lat: 47.2357,
+      lng: 39.7015,
+      name: endText
+    } : null);
+    
+    if (finalStart && finalEnd) {
+      onPlanRoute?.({ startPoint: finalStart, endPoint: finalEnd, budget, selectedStyles });
     }
   };
 
@@ -88,37 +106,53 @@ export default function RoutePlanner({ onPlanRoute }: RoutePlannerProps) {
             <div className="space-y-3">
               <Label>Точки маршрута</Label>
               
-              <Button
-                type="button"
-                variant={mapMode === 'start' ? 'default' : startPoint ? 'outline' : 'secondary'}
-                className="w-full justify-start text-left h-auto py-3"
-                onClick={() => setMapMode('start')}
-                data-testid="button-select-start"
-              >
-                <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs text-muted-foreground mb-0.5">Начальная точка</div>
-                  <div className="text-sm truncate">
-                    {startPoint ? startPoint.name : 'Нажмите, чтобы выбрать на карте'}
-                  </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">Начальная точка</Label>
+                <div className="flex gap-2">
+                  <Input
+                    type="text"
+                    placeholder="Введите адрес или место"
+                    value={startText}
+                    onChange={(e) => setStartText(e.target.value)}
+                    data-testid="input-start"
+                    className="flex-1"
+                  />
+                  <Button
+                    type="button"
+                    variant={mapMode === 'start' ? 'default' : 'outline'}
+                    size="icon"
+                    onClick={() => setMapMode(mapMode === 'start' ? null : 'start')}
+                    data-testid="button-select-start"
+                    title="Выбрать на карте"
+                  >
+                    <MapPin className="w-4 h-4" />
+                  </Button>
                 </div>
-              </Button>
+              </div>
 
-              <Button
-                type="button"
-                variant={mapMode === 'end' ? 'default' : endPoint ? 'outline' : 'secondary'}
-                className="w-full justify-start text-left h-auto py-3"
-                onClick={() => setMapMode('end')}
-                data-testid="button-select-end"
-              >
-                <MapPin className="w-4 h-4 mr-2 flex-shrink-0" />
-                <div className="flex-1 min-w-0">
-                  <div className="text-xs text-muted-foreground mb-0.5">Конечная точка</div>
-                  <div className="text-sm truncate">
-                    {endPoint ? endPoint.name : 'Нажмите, чтобы выбрать на карте'}
-                  </div>
+              <div className="space-y-2">
+                <Label className="text-xs text-muted-foreground">Конечная точка</Label>
+                <div className="flex gap-2">
+                  <Input
+                    type="text"
+                    placeholder="Введите адрес или место"
+                    value={endText}
+                    onChange={(e) => setEndText(e.target.value)}
+                    data-testid="input-end"
+                    className="flex-1"
+                  />
+                  <Button
+                    type="button"
+                    variant={mapMode === 'end' ? 'default' : 'outline'}
+                    size="icon"
+                    onClick={() => setMapMode(mapMode === 'end' ? null : 'end')}
+                    data-testid="button-select-end"
+                    title="Выбрать на карте"
+                  >
+                    <MapPin className="w-4 h-4" />
+                  </Button>
                 </div>
-              </Button>
+              </div>
             </div>
 
             <div className="space-y-4">
@@ -172,7 +206,7 @@ export default function RoutePlanner({ onPlanRoute }: RoutePlannerProps) {
               type="submit" 
               className="w-full" 
               size="lg" 
-              disabled={!startPoint || !endPoint}
+              disabled={(!startPoint && !startText) || (!endPoint && !endText)}
               data-testid="button-build-route"
             >
               Построить маршрут
