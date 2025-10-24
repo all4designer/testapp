@@ -13,6 +13,11 @@ export default function InteractiveMap({ onLocationSelect, startPoint, endPoint,
   const [mapInstance, setMapInstance] = useState<any>(null);
   const [startMarker, setStartMarker] = useState<any>(null);
   const [endMarker, setEndMarker] = useState<any>(null);
+  const onLocationSelectRef = useRef(onLocationSelect);
+
+  useEffect(() => {
+    onLocationSelectRef.current = onLocationSelect;
+  }, [onLocationSelect]);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -34,8 +39,8 @@ export default function InteractiveMap({ onLocationSelect, startPoint, endPoint,
             const firstGeoObject = res.geoObjects.get(0);
             const name = firstGeoObject.getAddressLine();
 
-            if (onLocationSelect) {
-              onLocationSelect({
+            if (onLocationSelectRef.current) {
+              onLocationSelectRef.current({
                 lat: coords[0],
                 lng: coords[1],
                 name: name
