@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Share2, Save, MapPin, Car, Bus, Footprints, Clock, Navigation, DollarSign, Users } from "lucide-react";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Share2, Save, MapPin, Car, Bus, Footprints, Clock, Navigation, DollarSign, Menu } from "lucide-react";
 import cathedralImage from "@assets/generated_images/Rostov_cathedral_landmark_photo_46e25bfb.png";
 import riverImage from "@assets/generated_images/Don_River_nature_landscape_828c778c.png";
 import fortressImage from "@assets/generated_images/Azov_fortress_historical_site_3ced1d25.png";
@@ -104,6 +105,7 @@ export default function RouteResult() {
   const [routeData, setRouteData] = useState<any>(null);
   const [selectedAttraction, setSelectedAttraction] = useState<number | null>(null);
   const [mapInstance, setMapInstance] = useState<any>(null);
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
   const mapRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<any[]>([]);
 
@@ -215,179 +217,206 @@ export default function RouteResult() {
 
   const activeRoute = routeTypes.find(r => r.id === activeRouteType);
 
-  return (
-    <div className="h-screen pt-16 flex flex-col">
-      <div className="flex-1 flex overflow-hidden">
-        <aside className="w-full md:w-96 lg:w-[32rem] bg-card border-r border-card-border overflow-y-auto">
-          <div className="p-6 space-y-6">
-            <div>
-              <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-2xl mb-3">
-                <Navigation className="w-6 h-6 text-primary" />
-              </div>
-              <h1 className="text-2xl font-light mb-2" data-testid="text-result-title">
-                Ваш персональный маршрут
-              </h1>
-              {routeData && (
-                <p className="text-sm text-muted-foreground">
-                  {routeData.startPoint?.name} → {routeData.endPoint?.name}
-                </p>
-              )}
+  const ResultContent = () => (
+    <div className="space-y-6">
+      <div>
+        <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-2xl mb-3">
+          <Navigation className="w-6 h-6 text-primary" />
+        </div>
+        <h1 className="text-2xl font-light mb-2" data-testid="text-result-title">
+          Ваш персональный маршрут
+        </h1>
+        {routeData && (
+          <p className="text-sm text-muted-foreground">
+            {routeData.startPoint?.name} → {routeData.endPoint?.name}
+          </p>
+        )}
+      </div>
+
+      <Card className="p-4">
+        <div className="flex flex-wrap gap-2 mb-4">
+          {routeTypes.map((type, index) => {
+            const Icon = type.icon;
+            return (
+              <Button
+                key={type.id}
+                variant={activeRouteType === type.id ? "default" : "outline"}
+                onClick={() => setActiveRouteType(type.id)}
+                size="sm"
+                className="flex-1 min-w-[100px]"
+                data-testid={`button-route-type-${index}`}
+              >
+                <Icon className="w-4 h-4 mr-2" />
+                {type.name}
+              </Button>
+            );
+          })}
+        </div>
+
+        {activeRoute && (
+          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-1.5">
+              <Clock className="w-4 h-4" />
+              <span>{activeRoute.totalTime}</span>
             </div>
+            <div className="flex items-center gap-1.5">
+              <Navigation className="w-4 h-4" />
+              <span>{activeRoute.distance}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <DollarSign className="w-4 h-4" />
+              <span>{activeRoute.cost}</span>
+            </div>
+          </div>
+        )}
+      </Card>
 
-            <Card className="p-4">
-              <div className="flex flex-wrap gap-2 mb-4">
-                {routeTypes.map((type, index) => {
-                  const Icon = type.icon;
-                  return (
-                    <Button
-                      key={type.id}
-                      variant={activeRouteType === type.id ? "default" : "outline"}
-                      onClick={() => setActiveRouteType(type.id)}
-                      size="sm"
-                      className="flex-1 min-w-[100px]"
-                      data-testid={`button-route-type-${index}`}
-                    >
-                      <Icon className="w-4 h-4 mr-2" />
-                      {type.name}
-                    </Button>
-                  );
-                })}
+      <div className="flex gap-2">
+        <Button variant="default" size="sm" onClick={handleSave} className="flex-1" data-testid="button-save-route">
+          <Save className="w-4 h-4 mr-2" />
+          Сохранить
+        </Button>
+        <Button variant="outline" size="sm" onClick={handleShare} className="flex-1" data-testid="button-share-route">
+          <Share2 className="w-4 h-4 mr-2" />
+          Поделиться
+        </Button>
+      </div>
+
+      <div>
+        <h2 className="text-lg font-medium mb-3">Точки маршрута</h2>
+        
+        <div className="space-y-3">
+          {mockAttractions.map((attraction, index) => (
+            <Card
+              key={attraction.id}
+              className={`overflow-hidden cursor-pointer hover-elevate active-elevate-2 transition-all ${
+                selectedAttraction === index ? 'ring-2 ring-primary' : ''
+              }`}
+              onClick={() => handleAttractionClick(attraction, index)}
+              data-testid={`card-attraction-${index}`}
+            >
+              <div className="flex gap-3 p-3">
+                <div className="w-20 aspect-square rounded-lg overflow-hidden flex-shrink-0">
+                  <img
+                    src={attraction.image}
+                    alt={attraction.name}
+                    className="w-full h-full object-cover"
+                    data-testid={`img-attraction-${index}`}
+                  />
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start gap-2 mb-1">
+                    <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold flex-shrink-0">
+                      {index + 1}
+                    </div>
+                    <h3 className="font-medium text-sm leading-tight" data-testid={`text-attraction-name-${index}`}>
+                      {attraction.name}
+                    </h3>
+                  </div>
+
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    <Badge variant="outline" className="text-xs" data-testid={`badge-category-${index}`}>
+                      {attraction.category}
+                    </Badge>
+                    <Badge variant="secondary" className="text-xs gap-1">
+                      <Clock className="w-3 h-3" />
+                      {attraction.duration}
+                    </Badge>
+                  </div>
+
+                  <p className="text-xs text-muted-foreground line-clamp-2" data-testid={`text-attraction-description-${index}`}>
+                    {attraction.description}
+                  </p>
+                </div>
               </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 
-              {activeRoute && (
-                <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1.5">
-                    <Clock className="w-4 h-4" />
-                    <span>{activeRoute.totalTime}</span>
+  return (
+    <div className="h-screen pt-16 flex flex-col md:flex-row overflow-hidden">
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:block w-96 lg:w-[32rem] bg-card border-r border-card-border overflow-y-auto">
+        <div className="p-6">
+          <ResultContent />
+        </div>
+      </aside>
+
+      {/* Map Container */}
+      <main className="flex-1 relative flex flex-col">
+        <div ref={mapRef} className="flex-1 w-full" data-testid="yandex-map" />
+        
+        {/* Desktop Bottom Panel for Selected Attraction */}
+        {selectedAttraction !== null && (
+          <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-card-border p-4">
+            <div className="flex gap-4 items-start">
+              <div className="w-24 aspect-square rounded-lg overflow-hidden flex-shrink-0">
+                <img
+                  src={mockAttractions[selectedAttraction].image}
+                  alt={mockAttractions[selectedAttraction].name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              
+              <div className="flex-1 min-w-0">
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <h3 className="font-semibold text-lg">{mockAttractions[selectedAttraction].name}</h3>
+                  <Badge variant="default">{mockAttractions[selectedAttraction].category}</Badge>
+                </div>
+                
+                <p className="text-sm text-muted-foreground mb-3">
+                  {mockAttractions[selectedAttraction].description}
+                </p>
+                
+                <div className="grid grid-cols-3 gap-4 text-sm">
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">Длительность</div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="w-4 h-4 text-primary" />
+                      <span className="font-medium">{mockAttractions[selectedAttraction].duration}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <Navigation className="w-4 h-4" />
-                    <span>{activeRoute.distance}</span>
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">Стоимость</div>
+                    <div className="flex items-center gap-1">
+                      <DollarSign className="w-4 h-4 text-primary" />
+                      <span className="font-medium">{mockAttractions[selectedAttraction].price}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <DollarSign className="w-4 h-4" />
-                    <span>{activeRoute.cost}</span>
+                  <div>
+                    <div className="text-xs text-muted-foreground mb-1">Лучшее время</div>
+                    <div className="font-medium text-xs">{mockAttractions[selectedAttraction].bestTime}</div>
                   </div>
                 </div>
-              )}
-            </Card>
-
-            <div className="flex gap-2">
-              <Button variant="default" size="sm" onClick={handleSave} className="flex-1" data-testid="button-save-route">
-                <Save className="w-4 h-4 mr-2" />
-                Сохранить
-              </Button>
-              <Button variant="outline" size="sm" onClick={handleShare} className="flex-1" data-testid="button-share-route">
-                <Share2 className="w-4 h-4 mr-2" />
-                Поделиться
-              </Button>
-            </div>
-
-            <div>
-              <h2 className="text-lg font-medium mb-3">Точки маршрута</h2>
-              
-              <div className="space-y-3">
-                {mockAttractions.map((attraction, index) => (
-                  <Card
-                    key={attraction.id}
-                    className={`overflow-hidden cursor-pointer hover-elevate active-elevate-2 transition-all ${
-                      selectedAttraction === index ? 'ring-2 ring-primary' : ''
-                    }`}
-                    onClick={() => handleAttractionClick(attraction, index)}
-                    data-testid={`card-attraction-${index}`}
-                  >
-                    <div className="flex gap-3 p-3">
-                      <div className="w-20 aspect-square rounded-lg overflow-hidden flex-shrink-0">
-                        <img
-                          src={attraction.image}
-                          alt={attraction.name}
-                          className="w-full h-full object-cover"
-                          data-testid={`img-attraction-${index}`}
-                        />
-                      </div>
-
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start gap-2 mb-1">
-                          <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold flex-shrink-0">
-                            {index + 1}
-                          </div>
-                          <h3 className="font-medium text-sm leading-tight" data-testid={`text-attraction-name-${index}`}>
-                            {attraction.name}
-                          </h3>
-                        </div>
-
-                        <div className="flex flex-wrap gap-1.5 mb-2">
-                          <Badge variant="outline" className="text-xs" data-testid={`badge-category-${index}`}>
-                            {attraction.category}
-                          </Badge>
-                          <Badge variant="secondary" className="text-xs gap-1">
-                            <Clock className="w-3 h-3" />
-                            {attraction.duration}
-                          </Badge>
-                        </div>
-
-                        <p className="text-xs text-muted-foreground line-clamp-2" data-testid={`text-attraction-description-${index}`}>
-                          {attraction.description}
-                        </p>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
               </div>
             </div>
           </div>
-        </aside>
+        )}
 
-        <main className="flex-1 relative flex flex-col">
-          <div ref={mapRef} className="flex-1 w-full" data-testid="yandex-map" />
-          
-          {selectedAttraction !== null && (
-            <div className="absolute bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-card-border p-4">
-              <div className="flex gap-4 items-start">
-                <div className="w-24 aspect-square rounded-lg overflow-hidden flex-shrink-0">
-                  <img
-                    src={mockAttractions[selectedAttraction].image}
-                    alt={mockAttractions[selectedAttraction].name}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className="font-semibold text-lg">{mockAttractions[selectedAttraction].name}</h3>
-                    <Badge variant="default">{mockAttractions[selectedAttraction].category}</Badge>
-                  </div>
-                  
-                  <p className="text-sm text-muted-foreground mb-3">
-                    {mockAttractions[selectedAttraction].description}
-                  </p>
-                  
-                  <div className="grid grid-cols-3 gap-4 text-sm">
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">Длительность</div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-4 h-4 text-primary" />
-                        <span className="font-medium">{mockAttractions[selectedAttraction].duration}</span>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">Стоимость</div>
-                      <div className="flex items-center gap-1">
-                        <DollarSign className="w-4 h-4 text-primary" />
-                        <span className="font-medium">{mockAttractions[selectedAttraction].price}</span>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-xs text-muted-foreground mb-1">Лучшее время</div>
-                      <div className="font-medium">{mockAttractions[selectedAttraction].bestTime}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </main>
-      </div>
+        {/* Mobile Sheet */}
+        <Sheet open={mobileSheetOpen} onOpenChange={setMobileSheetOpen}>
+          <SheetTrigger asChild>
+            <Button
+              size="lg"
+              className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 shadow-lg"
+              data-testid="button-open-mobile-result"
+            >
+              <Menu className="w-5 h-5 mr-2" />
+              Детали маршрута
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="bottom" className="h-[85vh] md:hidden overflow-y-auto">
+            <SheetHeader className="mb-6">
+              <SheetTitle className="sr-only">Детали маршрута</SheetTitle>
+            </SheetHeader>
+            <ResultContent />
+          </SheetContent>
+        </Sheet>
+      </main>
     </div>
   );
 }
