@@ -15,7 +15,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2 hover-elevate active-elevate-2 px-3 py-2 rounded-lg -ml-3">
             <MapPin className="w-6 h-6 text-primary" data-testid="icon-logo" />
-            <span className="font-semibold text-lg" data-testid="text-logo">РостовМаршрут</span>
+            <span className="font-semibold text-lg" data-testid="text-logo">СУЕТА РНД</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-6">

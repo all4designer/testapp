@@ -5,7 +5,9 @@ import RoutePlanner from "@/components/RoutePlanner";
 export default function Plan() {
   const [, setLocation] = useLocation();
 
-  const handlePlanRoute = () => {
+  const handlePlanRoute = (data: any) => {
+    console.log("Route data:", data);
+    localStorage.setItem("routeData", JSON.stringify(data));
     setLocation("/result");
   };
 
