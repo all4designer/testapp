@@ -339,10 +339,10 @@ export default function RouteResult() {
                   </div>
 
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem', marginBottom: '0.5rem' }}>
-                    <Badge variant="outline" size="sm" data-testid={`badge-category-${index}`}>
+                    <Badge variant="outline" data-testid={`badge-category-${index}`}>
                       {attraction.category}
                     </Badge>
-                    <Badge variant="secondary" size="sm" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                    <Badge variant="secondary" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                       <Clock style={{ width: '0.75rem', height: '0.75rem' }} />
                       {attraction.duration}
                     </Badge>
@@ -366,58 +366,55 @@ export default function RouteResult() {
   );
 
   return (
-    <div style={{ height: '100vh', paddingTop: '4rem', display: 'flex', flexDirection: 'row', overflow: 'hidden' }}>
+    <div className="route-result">
       {/* Desktop Sidebar */}
       <aside className="route-result__sidebar">
-        <div style={{ padding: '1.5rem' }}>
-          <ResultContent />
-        </div>
+        <ResultContent />
       </aside>
 
       {/* Map Container */}
-      <main style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
-        <div ref={mapRef} style={{ width: '100%', height: '100%' }} data-testid="yandex-map" />
+      <main className="route-result__map-container">
+        <div ref={mapRef} data-testid="yandex-map" />
         
         {/* Desktop Bottom Panel for Selected Attraction */}
         {selectedAttraction !== null && (
-          <div className="route-result__detail-panel">
-            <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-              <div style={{ width: '6rem', aspectRatio: '1', borderRadius: '0.5rem', overflow: 'hidden', flexShrink: 0 }}>
+          <div className={`route-result__detail-panel ${selectedAttraction !== null ? 'active' : ''}`}>
+            <div className="route-result__detail-content">
+              <div className="route-result__detail-image">
                 <img
                   src={mockAttractions[selectedAttraction].image}
                   alt={mockAttractions[selectedAttraction].name}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </div>
               
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                  <h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>{mockAttractions[selectedAttraction].name}</h3>
+              <div className="route-result__detail-body">
+                <div className="route-result__detail-header">
+                  <h3>{mockAttractions[selectedAttraction].name}</h3>
                   <Badge variant="primary">{mockAttractions[selectedAttraction].category}</Badge>
                 </div>
                 
-                <p className="text-small text-muted" style={{ marginBottom: '0.75rem' }}>
+                <p className="route-result__detail-description">
                   {mockAttractions[selectedAttraction].description}
                 </p>
                 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }} className="text-small">
-                  <div>
-                    <div className="text-muted" style={{ marginBottom: '0.25rem', fontSize: '0.75rem' }}>Длительность</div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                      <Clock style={{ width: '1rem', height: '1rem', color: 'hsl(118, 52%, 50%)' }} />
-                      <span style={{ fontWeight: 500 }}>{mockAttractions[selectedAttraction].duration}</span>
+                <div className="route-result__detail-meta">
+                  <div className="route-result__meta-item">
+                    <div className="route-result__meta-item-label">Длительность</div>
+                    <div className="route-result__meta-item-value">
+                      <Clock />
+                      <span>{mockAttractions[selectedAttraction].duration}</span>
                     </div>
                   </div>
-                  <div>
-                    <div className="text-muted" style={{ marginBottom: '0.25rem', fontSize: '0.75rem' }}>Стоимость</div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                      <DollarSign style={{ width: '1rem', height: '1rem', color: 'hsl(118, 52%, 50%)' }} />
-                      <span style={{ fontWeight: 500 }}>{mockAttractions[selectedAttraction].price}</span>
+                  <div className="route-result__meta-item">
+                    <div className="route-result__meta-item-label">Стоимость</div>
+                    <div className="route-result__meta-item-value">
+                      <DollarSign />
+                      <span>{mockAttractions[selectedAttraction].price}</span>
                     </div>
                   </div>
-                  <div>
-                    <div className="text-muted" style={{ marginBottom: '0.25rem', fontSize: '0.75rem' }}>Лучшее время</div>
-                    <div style={{ fontWeight: 500, fontSize: '0.75rem' }}>{mockAttractions[selectedAttraction].bestTime}</div>
+                  <div className="route-result__meta-item">
+                    <div className="route-result__meta-item-label">Лучшее время</div>
+                    <div className="route-result__meta-item-time">{mockAttractions[selectedAttraction].bestTime}</div>
                   </div>
                 </div>
               </div>
@@ -432,7 +429,7 @@ export default function RouteResult() {
           onClick={() => setMobileSheetOpen(!mobileSheetOpen)}
           data-testid="button-open-mobile-result"
         >
-          <Menu style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.5rem' }} />
+          <Menu />
           Детали маршрута
         </Button>
 
