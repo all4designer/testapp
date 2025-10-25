@@ -119,16 +119,14 @@ export default function InteractiveMap({ onLocationSelect, startPoint, endPoint,
   }, [mapInstance, startPoint, endPoint]);
 
   return (
-    <div className="relative w-full h-full">
-      <div ref={mapRef} className="w-full h-full rounded-lg overflow-hidden" data-testid="yandex-map" />
+    <div className="interactive-map">
+      <div ref={mapRef} className="interactive-map__container" data-testid="yandex-map" />
       {mode && (
-        <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-card/95 backdrop-blur-sm border border-card-border px-4 py-2 rounded-full shadow-lg">
-          <div className="flex items-center gap-2 text-sm">
-            <MapPin className="w-4 h-4 text-primary" />
-            <span>
-              {mode === 'start' ? 'Нажмите на карту, чтобы выбрать начальную точку' : 'Нажмите на карту, чтобы выбрать конечную точку'}
-            </span>
-          </div>
+        <div className="interactive-map__mode-indicator">
+          <MapPin />
+          <span>
+            {mode === 'start' ? 'Нажмите на карту, чтобы выбрать начальную точку' : 'Нажмите на карту, чтобы выбрать конечную точку'}
+          </span>
         </div>
       )}
     </div>

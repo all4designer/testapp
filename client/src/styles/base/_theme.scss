@@ -1,0 +1,15 @@
+@import '../utils/variables';
+
+body {
+  background-color: $background;
+  transition: background-color $transition-base, color $transition-base;
+  
+  .dark & {
+    background-color: $dark-background;
+  }
+}
+
+// Dark mode class
+.dark {
+  // This class is applied to the document root
+}

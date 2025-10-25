@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 
 export default function Landing() {
   return (
-    <div className="min-h-screen">
+    <div style={{ minHeight: '100vh' }}>
       <Header />
       <HeroSection />
       <BenefitsSection />

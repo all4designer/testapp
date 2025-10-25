@@ -1,0 +1,70 @@
+@import '../utils/variables';
+@import '../utils/mixins';
+
+.profile {
+  min-height: calc(100vh - 4rem);
+  padding: $spacing-24 $spacing-6;
+  
+  @include mobile {
+    padding: $spacing-12 $spacing-4;
+  }
+  
+  &__container {
+    max-width: 64rem;
+    margin: 0 auto;
+  }
+  
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-8;
+    
+    @include mobile {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-4;
+    }
+  }
+  
+  &__user-info {
+    @include flex-center;
+    gap: $spacing-4;
+  }
+  
+  &__avatar {
+    width: 4rem;
+    height: 4rem;
+    border-radius: $radius-full;
+    background-color: $primary-color;
+    @include flex-center;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $primary-foreground;
+    
+    .dark & {
+      background-color: $dark-primary-color;
+    }
+  }
+  
+  &__details {
+    &-name {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: $spacing-1;
+    }
+    
+    &-email {
+      font-size: 0.875rem;
+      color: $muted-foreground;
+      
+      .dark & {
+        color: $dark-muted-foreground;
+      }
+    }
+  }
+  
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: $spacing-6;
+  }
+}

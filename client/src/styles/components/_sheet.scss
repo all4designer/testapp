@@ -1,0 +1,106 @@
+@import '../utils/variables';
+@import '../utils/mixins';
+
+.sheet {
+  &__overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: $z-index-modal-backdrop;
+    animation: fadeIn $transition-base;
+  }
+  
+  &__content {
+    position: fixed;
+    background-color: $card-background;
+    z-index: $z-index-modal;
+    padding: $spacing-6;
+    box-shadow: $shadow-2xl;
+    
+    .dark & {
+      background-color: $dark-card-background;
+    }
+    
+    &--bottom {
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-top-left-radius: $radius-2xl;
+      border-top-right-radius: $radius-2xl;
+      max-height: 85vh;
+      overflow-y: auto;
+      @include custom-scrollbar;
+      animation: slideUp $transition-slow;
+      
+      @include desktop {
+        display: none;
+      }
+    }
+  }
+  
+  &__header {
+    margin-bottom: $spacing-6;
+    
+    &-inner {
+      @include flex-center;
+      gap: $spacing-3;
+    }
+    
+    &-icon {
+      width: 3rem;
+      height: 3rem;
+      background-color: rgba($primary-color, 0.1);
+      border-radius: $radius-xl;
+      @include flex-center;
+      
+      svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        color: $primary-color;
+      }
+      
+      .dark & {
+        background-color: rgba($dark-primary-color, 0.1);
+        
+        svg {
+          color: $dark-primary-color;
+        }
+      }
+    }
+    
+    &-text {
+      h2 {
+        font-size: 1.25rem;
+        font-weight: 300;
+        margin-bottom: $spacing-1;
+      }
+      
+      p {
+        font-size: 0.875rem;
+        color: $muted-foreground;
+        
+        .dark & {
+          color: $dark-muted-foreground;
+        }
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}

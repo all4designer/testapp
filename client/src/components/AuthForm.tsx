@@ -1,9 +1,8 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui-scss/Button";
+import { Input } from "@/components/ui-scss/Input";
+import { Label } from "@/components/ui-scss/Label";
+import { Card } from "@/components/ui-scss/Card";
 
 interface AuthFormProps {
   onSuccess?: () => void;
@@ -30,99 +29,113 @@ export default function AuthForm({ onSuccess }: AuthFormProps) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
-      <Card className="w-full max-w-md p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-light mb-2" data-testid="text-auth-title">
+    <div className="auth-form">
+      <Card className="auth-form__container">
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 300, marginBottom: '0.5rem' }} data-testid="text-auth-title">
             Добро пожаловать
           </h1>
-          <p className="text-muted-foreground" data-testid="text-auth-subtitle">
+          <p className="text-muted" data-testid="text-auth-subtitle">
             Начните планировать ваши путешествия
           </p>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2 mb-8">
-            <TabsTrigger value="login" data-testid="tab-login">Войти</TabsTrigger>
-            <TabsTrigger value="register" data-testid="tab-register">Зарегистрироваться</TabsTrigger>
-          </TabsList>
+        <div className="auth-form__tabs">
+          <div className="auth-form__tab-list">
+            <button
+              type="button"
+              className={`auth-form__tab ${activeTab === 'login' ? 'active' : ''}`}
+              onClick={() => setActiveTab('login')}
+              data-testid="tab-login"
+            >
+              Войти
+            </button>
+            <button
+              type="button"
+              className={`auth-form__tab ${activeTab === 'register' ? 'active' : ''}`}
+              onClick={() => setActiveTab('register')}
+              data-testid="tab-register"
+            >
+              Зарегистрироваться
+            </button>
+          </div>
+        </div>
 
-          <TabsContent value="login">
-            <form onSubmit={handleLogin} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="login-email">Email</Label>
-                <Input
-                  id="login-email"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={loginEmail}
-                  onChange={(e) => setLoginEmail(e.target.value)}
-                  required
-                  data-testid="input-login-email"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="login-password">Пароль</Label>
-                <Input
-                  id="login-password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
-                  required
-                  data-testid="input-login-password"
-                />
-              </div>
-              <Button type="submit" className="w-full" data-testid="button-login-submit">
-                Продолжить
-              </Button>
-            </form>
-          </TabsContent>
+        {activeTab === 'login' && (
+          <form onSubmit={handleLogin} className="auth-form__form">
+            <div className="auth-form__field">
+              <Label htmlFor="login-email">Email</Label>
+              <Input
+                id="login-email"
+                type="email"
+                placeholder="your@email.com"
+                value={loginEmail}
+                onChange={(e) => setLoginEmail(e.target.value)}
+                required
+                data-testid="input-login-email"
+              />
+            </div>
+            <div className="auth-form__field">
+              <Label htmlFor="login-password">Пароль</Label>
+              <Input
+                id="login-password"
+                type="password"
+                placeholder="••••••••"
+                value={loginPassword}
+                onChange={(e) => setLoginPassword(e.target.value)}
+                required
+                data-testid="input-login-password"
+              />
+            </div>
+            <Button type="submit" style={{ width: '100%' }} data-testid="button-login-submit">
+              Продолжить
+            </Button>
+          </form>
+        )}
 
-          <TabsContent value="register">
-            <form onSubmit={handleRegister} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="register-email">Email</Label>
-                <Input
-                  id="register-email"
-                  type="email"
-                  placeholder="your@email.com"
-                  value={registerEmail}
-                  onChange={(e) => setRegisterEmail(e.target.value)}
-                  required
-                  data-testid="input-register-email"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="register-password">Пароль</Label>
-                <Input
-                  id="register-password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={registerPassword}
-                  onChange={(e) => setRegisterPassword(e.target.value)}
-                  required
-                  data-testid="input-register-password"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="confirm-password">Подтвердите пароль</Label>
-                <Input
-                  id="confirm-password"
-                  type="password"
-                  placeholder="••••••••"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  data-testid="input-confirm-password"
-                />
-              </div>
-              <Button type="submit" className="w-full" data-testid="button-register-submit">
-                Продолжить
-              </Button>
-            </form>
-          </TabsContent>
-        </Tabs>
+        {activeTab === 'register' && (
+          <form onSubmit={handleRegister} className="auth-form__form">
+            <div className="auth-form__field">
+              <Label htmlFor="register-email">Email</Label>
+              <Input
+                id="register-email"
+                type="email"
+                placeholder="your@email.com"
+                value={registerEmail}
+                onChange={(e) => setRegisterEmail(e.target.value)}
+                required
+                data-testid="input-register-email"
+              />
+            </div>
+            <div className="auth-form__field">
+              <Label htmlFor="register-password">Пароль</Label>
+              <Input
+                id="register-password"
+                type="password"
+                placeholder="••••••••"
+                value={registerPassword}
+                onChange={(e) => setRegisterPassword(e.target.value)}
+                required
+                data-testid="input-register-password"
+              />
+            </div>
+            <div className="auth-form__field">
+              <Label htmlFor="confirm-password">Подтвердите пароль</Label>
+              <Input
+                id="confirm-password"
+                type="password"
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+                data-testid="input-confirm-password"
+              />
+            </div>
+            <Button type="submit" style={{ width: '100%' }} data-testid="button-register-submit">
+              Продолжить
+            </Button>
+          </form>
+        )}
       </Card>
     </div>
   );

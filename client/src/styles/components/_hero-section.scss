@@ -1,0 +1,46 @@
+@import '../utils/variables';
+@antml:parameter name="content">@import '../utils/mixins';
+
+.hero {
+  min-height: calc(100vh - 4rem);
+  @include flex-center;
+  flex-direction: column;
+  text-align: center;
+  padding: $spacing-16 $spacing-6;
+  
+  @include mobile {
+    padding: $spacing-12 $spacing-4;
+  }
+  
+  &__title {
+    font-size: 3.75rem;
+    font-weight: 700;
+    margin-bottom: $spacing-6;
+    line-height: 1.1;
+    
+    @include mobile {
+      font-size: 2.5rem;
+    }
+  }
+  
+  &__subtitle {
+    font-size: 1.25rem;
+    color: $muted-foreground;
+    margin-bottom: $spacing-10;
+    max-width: 42rem;
+    
+    @include mobile {
+      font-size: 1rem;
+    }
+    
+    .dark & {
+      color: $dark-muted-foreground;
+    }
+  }
+  
+  &__actions {
+    @include flex-center;
+    gap: $spacing-4;
+    flex-wrap: wrap;
+  }
+}

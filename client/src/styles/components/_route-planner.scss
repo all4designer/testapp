@@ -1,0 +1,226 @@
+@import '../utils/variables';
+@import '../utils/mixins';
+
+.route-planner {
+  height: 100vh;
+  padding-top: 4rem;
+  display: flex;
+  overflow: hidden;
+  
+  @include mobile {
+    flex-direction: column;
+  }
+  
+  &__sidebar {
+    background-color: $card-background;
+    overflow-y: auto;
+    @include custom-scrollbar;
+    z-index: $z-index-sticky;
+    
+    .dark & {
+      background-color: $dark-card-background;
+    }
+    
+    // Desktop: Floating sidebar
+    @include desktop {
+      position: absolute;
+      left: $spacing-6;
+      top: calc(4rem + #{$spacing-6});
+      bottom: $spacing-6;
+      width: 28rem;
+      max-width: calc(100% - #{$spacing-12});
+      border-radius: $radius-2xl;
+      border: 1px solid $card-border;
+      box-shadow: $shadow-2xl;
+      
+      .dark & {
+        border-color: $dark-card-border;
+      }
+    }
+    
+    @include mobile {
+      display: none;
+    }
+  }
+  
+  &__content {
+    padding: $spacing-6;
+    
+    @include mobile {
+      padding: $spacing-4;
+    }
+  }
+  
+  &__header {
+    margin-bottom: $spacing-6;
+    
+    &-icon {
+      @include flex-center;
+      width: 3.5rem;
+      height: 3.5rem;
+      background-color: rgba($primary-color, 0.1);
+      border-radius: $radius-2xl;
+      margin-bottom: $spacing-4;
+      
+      svg {
+        width: 1.75rem;
+        height: 1.75rem;
+        color: $primary-color;
+      }
+      
+      .dark & {
+        background-color: rgba($dark-primary-color, 0.1);
+        
+        svg {
+          color: $dark-primary-color;
+        }
+      }
+    }
+    
+    &-title {
+      font-size: 1.5rem;
+      font-weight: 300;
+      margin-bottom: $spacing-2;
+    }
+    
+    &-subtitle {
+      font-size: 0.875rem;
+      color: $muted-foreground;
+      
+      .dark & {
+        color: $dark-muted-foreground;
+      }
+    }
+  }
+  
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-6;
+  }
+  
+  &__field-group {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-3;
+  }
+  
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-2;
+  }
+  
+  &__input-row {
+    display: flex;
+    gap: $spacing-2;
+  }
+  
+  &__budget-slider {
+    padding-top: $spacing-2;
+    padding-bottom: $spacing-8;
+  }
+  
+  &__budget-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: $spacing-3;
+  }
+  
+  &__budget-label {
+    font-size: 0.75rem;
+    color: $muted-foreground;
+    transition: all $transition-base;
+    
+    &.active {
+      color: $foreground;
+      font-weight: 600;
+      transform: scale(1.1);
+    }
+    
+    .dark & {
+      color: $dark-muted-foreground;
+      
+      &.active {
+        color: $dark-foreground;
+      }
+    }
+  }
+  
+  &__styles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-2;
+  }
+  
+  &__map-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  &__mobile-trigger {
+    position: fixed;
+    bottom: $spacing-8;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: $z-index-fixed;
+    box-shadow: $shadow-xl;
+    
+    @include desktop {
+      display: none;
+    }
+  }
+}
+
+// Magnetic slider
+.magnetic-slider {
+  width: 100%;
+  height: 8px;
+  border-radius: $radius-full;
+  outline: none;
+  appearance: none;
+  cursor: pointer;
+  transition: all $transition-slow;
+  
+  &::-webkit-slider-thumb {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: $primary-color;
+    cursor: pointer;
+    border: 3px solid $card-background;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    
+    &:hover {
+      transform: scale(1.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+    
+    &:active {
+      transform: scale(1.1);
+    }
+  }
+  
+  &::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: $primary-color;
+    cursor: pointer;
+    border: 3px solid $card-background;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+    
+    &:hover {
+      transform: scale(1.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+    
+    &:active {
+      transform: scale(1.1);
+    }
+  }
+}

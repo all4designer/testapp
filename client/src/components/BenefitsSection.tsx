@@ -1,5 +1,6 @@
 import { Sparkles, Wifi, Ticket } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Card } from "@/components/ui-scss/Card";
 
 interface Benefit {
   icon: React.ReactNode;
@@ -9,17 +10,17 @@ interface Benefit {
 
 const benefits: Benefit[] = [
   {
-    icon: <Sparkles className="w-8 h-8 text-primary" />,
+    icon: <Sparkles style={{ width: '2rem', height: '2rem', color: 'hsl(118, 52%, 50%)' }} />,
     title: "Персонализация",
     description: "ИИ создаёт маршруты на основе ваших интересов и предпочтений"
   },
   {
-    icon: <Wifi className="w-8 h-8 text-primary" />,
+    icon: <Wifi style={{ width: '2rem', height: '2rem', color: 'hsl(118, 52%, 50%)' }} />,
     title: "Офлайн-режим",
     description: "Сохраняйте маршруты и пользуйтесь ими без подключения к интернету"
   },
   {
-    icon: <Ticket className="w-8 h-8 text-primary" />,
+    icon: <Ticket style={{ width: '2rem', height: '2rem', color: 'hsl(118, 52%, 50%)' }} />,
     title: "Билеты в один клик",
     description: "Бронируйте билеты и экскурсии прямо в приложении"
   }
@@ -53,38 +54,40 @@ function BenefitCard({ benefit, index }: { benefit: Benefit; index: number }) {
   return (
     <div
       ref={ref}
-      className={`transition-all duration-700 ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-      }`}
+      style={{
+        transition: 'all 0.7s ease',
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translateY(0)' : 'translateY(2rem)'
+      }}
       data-testid={`card-benefit-${index}`}
     >
-      <div className="bg-card border border-card-border rounded-xl p-8 h-full hover-elevate active-elevate-2">
-        <div className="mb-4" data-testid={`icon-benefit-${index}`}>{benefit.icon}</div>
-        <h3 className="text-xl font-semibold mb-3" data-testid={`text-benefit-title-${index}`}>
+      <Card hover style={{ padding: '2rem', height: '100%' }}>
+        <div style={{ marginBottom: '1rem' }} data-testid={`icon-benefit-${index}`}>{benefit.icon}</div>
+        <h3 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '0.75rem' }} data-testid={`text-benefit-title-${index}`}>
           {benefit.title}
         </h3>
-        <p className="text-muted-foreground" data-testid={`text-benefit-description-${index}`}>
+        <p className="text-muted" data-testid={`text-benefit-description-${index}`}>
           {benefit.description}
         </p>
-      </div>
+      </Card>
     </div>
   );
 }
 
 export default function BenefitsSection() {
   return (
-    <section className="py-24 bg-background">
-      <div className="container mx-auto px-4 sm:px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-light mb-4" data-testid="text-benefits-title">
+    <section style={{ padding: '6rem 0' }}>
+      <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.5rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+          <h2 style={{ fontSize: '3rem', fontWeight: 300, marginBottom: '1rem' }} data-testid="text-benefits-title">
             Почему РостовМаршрут?
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto" data-testid="text-benefits-subtitle">
+          <p style={{ fontSize: '1.125rem', maxWidth: '42rem', margin: '0 auto' }} className="text-muted" data-testid="text-benefits-subtitle">
             Современные технологии для незабываемых путешествий
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
           {benefits.map((benefit, index) => (
             <BenefitCard key={index} benefit={benefit} index={index} />
           ))}

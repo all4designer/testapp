@@ -1,0 +1,50 @@
+@import '../utils/variables';
+@import '../utils/mixins';
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  padding: $spacing-1 $spacing-2;
+  border-radius: $radius-full;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  transition: all $transition-base;
+  
+  &.badge-primary {
+    background-color: $primary-color;
+    color: $primary-foreground;
+    
+    .dark & {
+      background-color: $dark-primary-color;
+    }
+  }
+  
+  &.badge-outline {
+    background-color: transparent;
+    border: 1px solid $border-color;
+    color: $foreground;
+    
+    .dark & {
+      border-color: $dark-border;
+      color: $dark-foreground;
+    }
+  }
+  
+  &.badge-secondary {
+    background-color: $secondary-color;
+    color: $secondary-foreground;
+    
+    .dark & {
+      background-color: $dark-secondary-color;
+      color: $dark-foreground;
+    }
+  }
+  
+  &.badge-hover {
+    @include hover-elevate;
+    cursor: pointer;
+  }
+}

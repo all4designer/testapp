@@ -1,0 +1,103 @@
+@import '../utils/variables';
+@import '../utils/mixins';
+
+.btn {
+  @include button-base;
+  padding: $spacing-2 $spacing-4;
+  min-height: 2.25rem;
+  
+  &.btn-sm {
+    padding: $spacing-1 $spacing-3;
+    min-height: 2rem;
+    font-size: 0.8125rem;
+  }
+  
+  &.btn-lg {
+    padding: $spacing-3 $spacing-6;
+    min-height: 2.5rem;
+    font-size: 1rem;
+  }
+  
+  &.btn-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+  }
+  
+  &.btn-primary {
+    background-color: $primary-color;
+    color: $primary-foreground;
+    
+    &:hover:not(:disabled) {
+      filter: brightness(1.1);
+    }
+    
+    &:active:not(:disabled) {
+      filter: brightness(0.95);
+    }
+    
+    .dark & {
+      background-color: $dark-primary-color;
+    }
+  }
+  
+  &.btn-outline {
+    background-color: transparent;
+    border: 1px solid $border-color;
+    color: $foreground;
+    
+    &:hover:not(:disabled) {
+      background-color: $accent;
+      color: $accent-foreground;
+    }
+    
+    .dark & {
+      border-color: $dark-border;
+      color: $dark-foreground;
+      
+      &:hover:not(:disabled) {
+        background-color: $dark-accent;
+        color: $dark-accent-foreground;
+      }
+    }
+  }
+  
+  &.btn-secondary {
+    background-color: $secondary-color;
+    color: $secondary-foreground;
+    
+    &:hover:not(:disabled) {
+      filter: brightness(0.96);
+    }
+    
+    .dark & {
+      background-color: $dark-secondary-color;
+      color: $dark-foreground;
+    }
+  }
+  
+  &.btn-ghost {
+    background-color: transparent;
+    
+    &:hover:not(:disabled) {
+      background-color: $accent;
+      color: $accent-foreground;
+    }
+    
+    .dark & {
+      &:hover:not(:disabled) {
+        background-color: $dark-accent;
+        color: $dark-accent-foreground;
+      }
+    }
+  }
+  
+  &.btn-destructive {
+    background-color: $destructive;
+    color: $destructive-foreground;
+    
+    &:hover:not(:disabled) {
+      filter: brightness(1.1);
+    }
+  }
+}

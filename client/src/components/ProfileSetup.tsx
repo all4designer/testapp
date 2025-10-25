@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui-scss/Button";
+import { Input } from "@/components/ui-scss/Input";
+import { Label } from "@/components/ui-scss/Label";
+import { Card } from "@/components/ui-scss/Card";
+import { Badge } from "@/components/ui-scss/Badge";
 import { Upload } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 
 interface ProfileSetupProps {
   onComplete?: () => void;
@@ -53,25 +52,36 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
     onComplete?.();
   };
 
+  const initials = `${firstName?.[0] || "?"}${lastName?.[0] || ""}`;
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
-      <Card className="w-full max-w-2xl p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-light mb-2" data-testid="text-setup-title">
+    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '3rem 1rem' }}>
+      <Card style={{ width: '100%', maxWidth: '42rem', padding: '2rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 300, marginBottom: '0.5rem' }} data-testid="text-setup-title">
             Расскажите о себе
           </h1>
-          <p className="text-muted-foreground" data-testid="text-setup-subtitle">
+          <p className="text-muted" data-testid="text-setup-subtitle">
             Это поможет нам создать идеальный маршрут для вас
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="flex flex-col items-center gap-4">
-            <Avatar className="w-24 h-24">
-              <AvatarFallback className="text-2xl bg-primary/10 text-primary">
-                {firstName?.[0] || "?"}{lastName?.[0] || ""}
-              </AvatarFallback>
-            </Avatar>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+            <div style={{
+              width: '6rem',
+              height: '6rem',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(118, 182, 117, 0.1)',
+              color: 'hsl(118, 52%, 50%)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.5rem',
+              fontWeight: 600
+            }}>
+              {initials}
+            </div>
             <Button 
               type="button" 
               variant="outline" 
@@ -79,13 +89,13 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
               onClick={() => console.log("Upload avatar clicked")}
               data-testid="button-upload-avatar"
             >
-              <Upload className="w-4 h-4 mr-2" />
+              <Upload style={{ width: '1rem', height: '1rem', marginRight: '0.5rem' }} />
               Загрузить фото
             </Button>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+            <div>
               <Label htmlFor="firstName">Имя</Label>
               <Input
                 id="firstName"
@@ -96,7 +106,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
                 data-testid="input-first-name"
               />
             </div>
-            <div className="space-y-2">
+            <div>
               <Label htmlFor="lastName">Фамилия</Label>
               <Input
                 id="lastName"
@@ -109,17 +119,17 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
             </div>
           </div>
 
-          <div className="space-y-4">
+          <div>
             <Label>Ваши интересы</Label>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-small text-muted" style={{ marginBottom: '1rem' }}>
               Выберите темы, которые вам интересны
             </p>
-            <div className="flex flex-wrap gap-2">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
               {interests.map((interest, index) => (
                 <Badge
                   key={interest}
-                  variant={selectedInterests.includes(interest) ? "default" : "outline"}
-                  className="cursor-pointer hover-elevate active-elevate-2"
+                  variant={selectedInterests.includes(interest) ? "primary" : "outline"}
+                  hover
                   onClick={() => toggleInterest(interest)}
                   data-testid={`badge-interest-${index}`}
                 >
@@ -129,7 +139,7 @@ export default function ProfileSetup({ onComplete }: ProfileSetupProps) {
             </div>
           </div>
 
-          <Button type="submit" className="w-full" data-testid="button-save-profile">
+          <Button type="submit" style={{ width: '100%' }} data-testid="button-save-profile">
             Сохранить и начать
           </Button>
         </form>

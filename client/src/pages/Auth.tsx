@@ -10,7 +10,7 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div style={{ minHeight: '100vh' }}>
       <Header />
       <AuthForm onSuccess={handleSuccess} />
     </div>

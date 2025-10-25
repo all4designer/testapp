@@ -10,7 +10,7 @@ export default function Setup() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div style={{ minHeight: '100vh' }}>
       <Header />
       <ProfileSetup onComplete={handleComplete} />
     </div>

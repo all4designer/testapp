@@ -3,7 +3,7 @@ import UserProfile from "@/components/UserProfile";
 
 export default function Profile() {
   return (
-    <div className="min-h-screen">
+    <div style={{ minHeight: '100vh' }}>
       <Header />
       <UserProfile />
     </div>

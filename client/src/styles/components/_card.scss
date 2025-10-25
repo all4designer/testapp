@@ -1,0 +1,10 @@
+@import '../utils/variables';
+@import '../utils/mixins';
+
+.card {
+  @include card;
+  
+  &.card-hover {
+    @include hover-elevate;
+  }
+}

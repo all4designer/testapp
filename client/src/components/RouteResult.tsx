@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui-scss/Button";
+import { Card } from "@/components/ui-scss/Card";
+import { Badge } from "@/components/ui-scss/Badge";
 import { Share2, Save, MapPin, Car, Bus, Footprints, Clock, Navigation, DollarSign, Menu } from "lucide-react";
 import cathedralImage from "@assets/generated_images/Rostov_cathedral_landmark_photo_46e25bfb.png";
 import riverImage from "@assets/generated_images/Don_River_nature_landscape_828c778c.png";
@@ -218,35 +217,44 @@ export default function RouteResult() {
   const activeRoute = routeTypes.find(r => r.id === activeRouteType);
 
   const ResultContent = () => (
-    <div className="space-y-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       <div>
-        <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-2xl mb-3">
-          <Navigation className="w-6 h-6 text-primary" />
+        <div style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '3rem',
+          height: '3rem',
+          backgroundColor: 'rgba(118, 182, 117, 0.1)',
+          borderRadius: '1rem',
+          marginBottom: '0.75rem'
+        }}>
+          <Navigation style={{ width: '1.5rem', height: '1.5rem', color: 'hsl(118, 52%, 50%)' }} />
         </div>
-        <h1 className="text-2xl font-light mb-2" data-testid="text-result-title">
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 300, marginBottom: '0.5rem' }} data-testid="text-result-title">
           Ваш персональный маршрут
         </h1>
         {routeData && (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-small text-muted">
             {routeData.startPoint?.name} → {routeData.endPoint?.name}
           </p>
         )}
       </div>
 
-      <Card className="p-4">
-        <div className="flex flex-wrap gap-2 mb-4">
+      <Card style={{ padding: '1rem' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
           {routeTypes.map((type, index) => {
             const Icon = type.icon;
             return (
               <Button
                 key={type.id}
-                variant={activeRouteType === type.id ? "default" : "outline"}
+                variant={activeRouteType === type.id ? "primary" : "outline"}
                 onClick={() => setActiveRouteType(type.id)}
                 size="sm"
-                className="flex-1 min-w-[100px]"
+                style={{ flex: '1 1 100px', minWidth: '100px' }}
                 data-testid={`button-route-type-${index}`}
               >
-                <Icon className="w-4 h-4 mr-2" />
+                <Icon style={{ width: '1rem', height: '1rem', marginRight: '0.5rem' }} />
                 {type.name}
               </Button>
             );
@@ -254,78 +262,98 @@ export default function RouteResult() {
         </div>
 
         {activeRoute && (
-          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-            <div className="flex items-center gap-1.5">
-              <Clock className="w-4 h-4" />
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }} className="text-small text-muted">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+              <Clock style={{ width: '1rem', height: '1rem' }} />
               <span>{activeRoute.totalTime}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <Navigation className="w-4 h-4" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+              <Navigation style={{ width: '1rem', height: '1rem' }} />
               <span>{activeRoute.distance}</span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <DollarSign className="w-4 h-4" />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+              <DollarSign style={{ width: '1rem', height: '1rem' }} />
               <span>{activeRoute.cost}</span>
             </div>
           </div>
         )}
       </Card>
 
-      <div className="flex gap-2">
-        <Button variant="default" size="sm" onClick={handleSave} className="flex-1" data-testid="button-save-route">
-          <Save className="w-4 h-4 mr-2" />
+      <div style={{ display: 'flex', gap: '0.5rem' }}>
+        <Button variant="primary" size="sm" onClick={handleSave} style={{ flex: 1 }} data-testid="button-save-route">
+          <Save style={{ width: '1rem', height: '1rem', marginRight: '0.5rem' }} />
           Сохранить
         </Button>
-        <Button variant="outline" size="sm" onClick={handleShare} className="flex-1" data-testid="button-share-route">
-          <Share2 className="w-4 h-4 mr-2" />
+        <Button variant="outline" size="sm" onClick={handleShare} style={{ flex: 1 }} data-testid="button-share-route">
+          <Share2 style={{ width: '1rem', height: '1rem', marginRight: '0.5rem' }} />
           Поделиться
         </Button>
       </div>
 
       <div>
-        <h2 className="text-lg font-medium mb-3">Точки маршрута</h2>
+        <h2 style={{ fontSize: '1.125rem', fontWeight: 500, marginBottom: '0.75rem' }}>Точки маршрута</h2>
         
-        <div className="space-y-3">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
           {mockAttractions.map((attraction, index) => (
             <Card
               key={attraction.id}
-              className={`overflow-hidden cursor-pointer hover-elevate active-elevate-2 transition-all ${
-                selectedAttraction === index ? 'ring-2 ring-primary' : ''
-              }`}
+              hover
               onClick={() => handleAttractionClick(attraction, index)}
               data-testid={`card-attraction-${index}`}
+              style={{
+                overflow: 'hidden',
+                cursor: 'pointer',
+                outline: selectedAttraction === index ? '2px solid hsl(118, 52%, 50%)' : 'none'
+              }}
             >
-              <div className="flex gap-3 p-3">
-                <div className="w-20 aspect-square rounded-lg overflow-hidden flex-shrink-0">
+              <div style={{ display: 'flex', gap: '0.75rem', padding: '0.75rem' }}>
+                <div style={{ width: '5rem', aspectRatio: '1', borderRadius: '0.5rem', overflow: 'hidden', flexShrink: 0 }}>
                   <img
                     src={attraction.image}
                     alt={attraction.name}
-                    className="w-full h-full object-cover"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     data-testid={`img-attraction-${index}`}
                   />
                 </div>
 
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start gap-2 mb-1">
-                    <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold flex-shrink-0">
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                    <div style={{
+                      width: '1.5rem',
+                      height: '1.5rem',
+                      borderRadius: '50%',
+                      backgroundColor: 'hsl(118, 52%, 50%)',
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      flexShrink: 0
+                    }}>
                       {index + 1}
                     </div>
-                    <h3 className="font-medium text-sm leading-tight" data-testid={`text-attraction-name-${index}`}>
+                    <h3 style={{ fontSize: '0.875rem', fontWeight: 500, lineHeight: 1.3 }} data-testid={`text-attraction-name-${index}`}>
                       {attraction.name}
                     </h3>
                   </div>
 
-                  <div className="flex flex-wrap gap-1.5 mb-2">
-                    <Badge variant="outline" className="text-xs" data-testid={`badge-category-${index}`}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.375rem', marginBottom: '0.5rem' }}>
+                    <Badge variant="outline" size="sm" data-testid={`badge-category-${index}`}>
                       {attraction.category}
                     </Badge>
-                    <Badge variant="secondary" className="text-xs gap-1">
-                      <Clock className="w-3 h-3" />
+                    <Badge variant="secondary" size="sm" style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                      <Clock style={{ width: '0.75rem', height: '0.75rem' }} />
                       {attraction.duration}
                     </Badge>
                   </div>
 
-                  <p className="text-xs text-muted-foreground line-clamp-2" data-testid={`text-attraction-description-${index}`}>
+                  <p className="text-small text-muted" style={{
+                    display: '-webkit-box',
+                    WebkitLineClamp: 2,
+                    WebkitBoxOrient: 'vertical',
+                    overflow: 'hidden'
+                  }} data-testid={`text-attraction-description-${index}`}>
                     {attraction.description}
                   </p>
                 </div>
@@ -338,58 +366,58 @@ export default function RouteResult() {
   );
 
   return (
-    <div className="h-screen pt-16 flex flex-col md:flex-row overflow-hidden">
+    <div style={{ height: '100vh', paddingTop: '4rem', display: 'flex', flexDirection: 'row', overflow: 'hidden' }}>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:block w-96 lg:w-[32rem] bg-card border-r border-card-border overflow-y-auto">
-        <div className="p-6">
+      <aside className="route-result__sidebar">
+        <div style={{ padding: '1.5rem' }}>
           <ResultContent />
         </div>
       </aside>
 
       {/* Map Container */}
-      <main className="flex-1 relative overflow-hidden">
-        <div ref={mapRef} className="w-full h-full" data-testid="yandex-map" />
+      <main style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+        <div ref={mapRef} style={{ width: '100%', height: '100%' }} data-testid="yandex-map" />
         
         {/* Desktop Bottom Panel for Selected Attraction */}
         {selectedAttraction !== null && (
-          <div className="hidden md:block absolute bottom-0 left-0 right-0 bg-card/95 backdrop-blur-sm border-t border-card-border p-4 z-30">
-            <div className="flex gap-4 items-start">
-              <div className="w-24 aspect-square rounded-lg overflow-hidden flex-shrink-0">
+          <div className="route-result__detail-panel">
+            <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
+              <div style={{ width: '6rem', aspectRatio: '1', borderRadius: '0.5rem', overflow: 'hidden', flexShrink: 0 }}>
                 <img
                   src={mockAttractions[selectedAttraction].image}
                   alt={mockAttractions[selectedAttraction].name}
-                  className="w-full h-full object-cover"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </div>
               
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2 mb-2">
-                  <h3 className="font-semibold text-lg">{mockAttractions[selectedAttraction].name}</h3>
-                  <Badge variant="default">{mockAttractions[selectedAttraction].category}</Badge>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                  <h3 style={{ fontSize: '1.125rem', fontWeight: 600 }}>{mockAttractions[selectedAttraction].name}</h3>
+                  <Badge variant="primary">{mockAttractions[selectedAttraction].category}</Badge>
                 </div>
                 
-                <p className="text-sm text-muted-foreground mb-3">
+                <p className="text-small text-muted" style={{ marginBottom: '0.75rem' }}>
                   {mockAttractions[selectedAttraction].description}
                 </p>
                 
-                <div className="grid grid-cols-3 gap-4 text-sm">
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem' }} className="text-small">
                   <div>
-                    <div className="text-xs text-muted-foreground mb-1">Длительность</div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4 text-primary" />
-                      <span className="font-medium">{mockAttractions[selectedAttraction].duration}</span>
+                    <div className="text-muted" style={{ marginBottom: '0.25rem', fontSize: '0.75rem' }}>Длительность</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                      <Clock style={{ width: '1rem', height: '1rem', color: 'hsl(118, 52%, 50%)' }} />
+                      <span style={{ fontWeight: 500 }}>{mockAttractions[selectedAttraction].duration}</span>
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-muted-foreground mb-1">Стоимость</div>
-                    <div className="flex items-center gap-1">
-                      <DollarSign className="w-4 h-4 text-primary" />
-                      <span className="font-medium">{mockAttractions[selectedAttraction].price}</span>
+                    <div className="text-muted" style={{ marginBottom: '0.25rem', fontSize: '0.75rem' }}>Стоимость</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                      <DollarSign style={{ width: '1rem', height: '1rem', color: 'hsl(118, 52%, 50%)' }} />
+                      <span style={{ fontWeight: 500 }}>{mockAttractions[selectedAttraction].price}</span>
                     </div>
                   </div>
                   <div>
-                    <div className="text-xs text-muted-foreground mb-1">Лучшее время</div>
-                    <div className="font-medium text-xs">{mockAttractions[selectedAttraction].bestTime}</div>
+                    <div className="text-muted" style={{ marginBottom: '0.25rem', fontSize: '0.75rem' }}>Лучшее время</div>
+                    <div style={{ fontWeight: 500, fontSize: '0.75rem' }}>{mockAttractions[selectedAttraction].bestTime}</div>
                   </div>
                 </div>
               </div>
@@ -397,25 +425,28 @@ export default function RouteResult() {
           </div>
         )}
 
+        {/* Mobile Sheet Trigger */}
+        <Button
+          size="lg"
+          className="route-result__mobile-trigger"
+          onClick={() => setMobileSheetOpen(!mobileSheetOpen)}
+          data-testid="button-open-mobile-result"
+        >
+          <Menu style={{ width: '1.25rem', height: '1.25rem', marginRight: '0.5rem' }} />
+          Детали маршрута
+        </Button>
+
         {/* Mobile Sheet */}
-        <Sheet open={mobileSheetOpen} onOpenChange={setMobileSheetOpen}>
-          <SheetTrigger asChild>
-            <Button
-              size="lg"
-              className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 shadow-lg"
-              data-testid="button-open-mobile-result"
-            >
-              <Menu className="w-5 h-5 mr-2" />
-              Детали маршрута
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="bottom" className="h-[85vh] md:hidden overflow-y-auto">
-            <SheetHeader className="mb-6">
-              <SheetTitle className="sr-only">Детали маршрута</SheetTitle>
-            </SheetHeader>
-            <ResultContent />
-          </SheetContent>
-        </Sheet>
+        {mobileSheetOpen && (
+          <div className="sheet__overlay" onClick={() => setMobileSheetOpen(false)}>
+            <div className="sheet__content sheet__content--bottom" onClick={(e) => e.stopPropagation()}>
+              <div className="sheet__header">
+                <h2>Детали маршрута</h2>
+              </div>
+              <ResultContent />
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

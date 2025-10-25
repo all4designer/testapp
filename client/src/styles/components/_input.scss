@@ -1,0 +1,28 @@
+@import '../utils/variables';
+@import '../utils/mixins';
+
+.input {
+  @include input;
+  min-height: 2.25rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: $spacing-2;
+  color: $foreground;
+  
+  .dark & {
+    color: $dark-foreground;
+  }
+  
+  &.label-sm {
+    font-size: 0.75rem;
+    color: $muted-foreground;
+    
+    .dark & {
+      color: $dark-muted-foreground;
+    }
+  }
+}

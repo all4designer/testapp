@@ -3,7 +3,7 @@ import RouteResult from "@/components/RouteResult";
 
 export default function Result() {
   return (
-    <div className="min-h-screen">
+    <div style={{ minHeight: '100vh' }}>
       <Header />
       <RouteResult />
     </div>
